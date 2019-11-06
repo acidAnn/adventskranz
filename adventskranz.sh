@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# GPL v3 license
+
+VERSION="0.1"
+
+usage () {
+    cat << EOF >&2
+    
+Usage: $0 [--version] [-h | --help] [-c | --candle CANDLE_NUM]
+Print a festive Adventskranz on the CLI.
+  --version   Show version
+  -h | --help Show help
+  -c | --candle CANDLE_NUM Give the number of burning candles
+    
+EOF
+}
+
+CANDLE_NUM=0
+
+while [ -n "$1" ]; do
+    # Stop reading when we've run out of options.
+    [ "$(printf "%s" "$1" | cut -c 1)" != "-" ] && break
+
+    if [ "$1" = "--version" ]; then
+        echo "v$VERSION"
+        exit 0
+    fi
+    if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+        usage
+        exit 1
+    fi
+    if [ "$1" = "-c" ] || [ "$1" = "--candle" ]; then
+        shift
+        CANDLE_NUM=$1
+    fi
+done
+
+if [ -z $CANDLE_NUM ]; then
+     echo No candle number supplied :fire:
+elif [ $CANDLE_NUM -gt 4 ]; then
+     echo ... dann hast du Weihnachten verpennt!
+else
+     cat candles/ad$CANDLE_NUM.txt
+fi
