@@ -41,5 +41,8 @@ if [ -z $CANDLE_NUM ]; then
 elif [ $CANDLE_NUM -gt 4 ]; then
      echo ... then you have sleeped through Christmas! / dann hast du Weihnachten verpennt!
 else
-     cat candles/ad$CANDLE_NUM.txt
+     full_path=$(realpath $0)
+     dir_path=$(dirname $full_path)
+
+     cat $dir_path/candles/ad$CANDLE_NUM.txt
 fi
