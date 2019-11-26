@@ -28,21 +28,28 @@ while [ -n "$1" ]; do
     fi
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
         usage
-        exit 1
+        exit 0
     fi
     if [ "$1" = "-c" ] || [ "$1" = "--candle" ]; then
         shift
         CANDLE_NUM=$1
+        if [[ $CANDLE_NUM = -* ]]; then
+            echo "no time travelling, honey ;)"
+            exit 1
+        fi
     fi
 done
 
 if [ -z $CANDLE_NUM ]; then
      echo please specify how many candles you want to see burn
+     exit 1
 elif [ $CANDLE_NUM -gt 4 ]; then
      echo ... then you have sleeped through Christmas! / dann hast du Weihnachten verpennt!
+     exit 1
 else
      full_path=$(realpath $0)
      dir_path=$(dirname $full_path)
 
      cat $dir_path/candles/ad$CANDLE_NUM.txt
+     exit 0
 fi
