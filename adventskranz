@@ -11,12 +11,62 @@ Usage: $0 [--version] [-h | --help] [-c | --candle CANDLE_NUM]
 Print a festive Adventskranz on the CLI.
   --version   Show version
   -h | --help Show help
-  -c | --candle CANDLE_NUM Give the number of burning candles
+  -c | --candle CANDLE_NUM Manually set the number of burning candles
     
 EOF
 }
+################## HELPER FUNCTIONS #############################
 
-CANDLE_NUM=$(./candlenum.sh)
+# Code stolen from this post:
+# https://superuser.com/questions/823883/how-to-justify-and-center-text-in-bash
+
+display_center(){
+    columns="$(tput cols)"
+    while IFS= read -r line; do
+        printf "%*s\n" $(( (${#line} + columns) / 2)) "$line"
+    done < "$1"
+}
+
+
+candlesum(){
+  year=$(date +%Y)
+  today=$(date +%s)
+  christmas=$(date -d $year-12-24 +%s)
+  
+  i=0
+  while [ $(date +%u --date "$year-12-24 -$i days") != "7" ]; do
+    let "i=i+1"
+    fourthad_day=$(date +%d --date "$year-12-24 -$i days")
+  done
+  
+  thirdad_day=$(date +%d --date "$year-12-$fourthad_day -1 week")
+  
+  secondad_day=$(date +%d --date "$year-12-$thirdad_day -1 week")
+  secondad_month=$(date +%m --date "$year-12-$thirdad_day -1 week")
+  
+  firstad_day=$(date +%d --date "$year-$secondad_month-$secondad_day -1 week")
+  firstad_month=$(date +%m --date "$year-$secondad_month-$secondad_day -1 week")
+  
+  
+  if [ $today -ge $christmas ]; then
+    echo 0
+  elif [ $today -lt $christmas ] && [ $today -ge $(date --date $year-12-$fourthad_day +%s) ]; then
+    echo 4
+  elif [ $today -lt $(date --date $year-12-$fourthad_day +%s) ] && [ $today -ge $(date --date $year-12-$thirdad_day +%s) ]; then
+    echo 3
+  elif [ $today -lt $(date --date $year-12-$thirdad_day +%s) ] && [ $today -ge $(date --date $year-$secondad_month-$secondad_day +%s) ]; then
+    echo 2
+  elif [ $today -lt $(date --date $year-$secondad_month-$secondad_day +%s) ] && [ $today -ge $(date --date $year-$firstad_month-$firstad_day +%s) ]; then
+    echo 1
+  elif [ $today -lt $(date --date $year-$firstad_month-$secondad_day +%s) ]; then
+    echo 0
+  fi
+}
+
+############################## SOME MAY CALL IT MAIN ################################
+
+
+CANDLE_NUM=$(candlesum)
 
 while [ -n "$1" ]; do
     # Stop reading when we've run out of options.
@@ -50,6 +100,7 @@ else
      full_path=$(realpath $0)
      dir_path=$(dirname $full_path)
 
-     cat $dir_path/candles/ad$CANDLE_NUM.txt
+     display_center $dir_path/candles/ad$CANDLE_NUM.txt
      exit 0
 fi
+
