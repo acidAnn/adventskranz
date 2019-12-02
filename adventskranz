@@ -16,7 +16,7 @@ Print a festive Adventskranz on the CLI.
 EOF
 }
 
-CANDLE_NUM=0
+CANDLE_NUM=$(./candlenum.sh)
 
 while [ -n "$1" ]; do
     # Stop reading when we've run out of options.
