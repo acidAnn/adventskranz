@@ -29,7 +29,7 @@ If you want to display the adventskranz with every startup of your shell, simply
 
 ```sh
  if [[ $(date +%s) -le $(date +%s --date $(date +%Y)-12-24) ]] && [[ $(date +%s) -gt $(date +%s --date "$(date +%Y)-12-24 -4weeks") ]] ; then
-    bash /home/marco/PycharmProjects/adventskranz/adventskranz
+    bash /path/to/adventskranz/adventskranz
 fi
 ```
 
