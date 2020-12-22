@@ -83,7 +83,7 @@ while [ -n "$1" ]; do
     if [ "$1" = "-c" ] || [ "$1" = "--candle" ]; then
         shift
         CANDLE_NUM=$1
-        if [[ $CANDLE_NUM = -* ]]; then
+        if echo $CANDLE_NUM | grep -qe '-.*'; then
             echo "no time travelling, honey ;)"
             exit 1
         fi
