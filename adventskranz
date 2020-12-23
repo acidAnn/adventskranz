@@ -35,7 +35,7 @@ candlesum(){
   
   i=0
   while [ $(date +%u --date "$year-12-24 -$i days") != "7" ]; do
-    let "i=i+1"
+    i=$(($i+1))
     fourthad_day=$(date +%d --date "$year-12-24 -$i days")
   done
   
@@ -83,7 +83,7 @@ while [ -n "$1" ]; do
     if [ "$1" = "-c" ] || [ "$1" = "--candle" ]; then
         shift
         CANDLE_NUM=$1
-        if [[ $CANDLE_NUM = -* ]]; then
+        if echo $CANDLE_NUM | grep -qe '-.*'; then
             echo "no time travelling, honey ;)"
             exit 1
         fi
